@@ -1,0 +1,1 @@
+"""Validation layer: data-quality checks, point-in-time metadata, look-ahead."""

@@ -1,0 +1,1 @@
+"""Dataset layer: content fingerprinting and registry (Phase 2)."""

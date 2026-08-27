@@ -1,0 +1,1 @@
+"""Storage layer: project paths, config, and SQLite metadata store."""

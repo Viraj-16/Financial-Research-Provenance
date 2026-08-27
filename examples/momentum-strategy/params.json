@@ -1,0 +1,6 @@
+{
+  "lookback": 90,
+  "n_assets": 20,
+  "seed": 42,
+  "rebalance": "monthly"
+}

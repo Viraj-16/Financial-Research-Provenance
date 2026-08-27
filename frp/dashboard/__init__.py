@@ -1,0 +1,1 @@
+"""Read-only dashboard: export the local store and serve a static HTML view."""

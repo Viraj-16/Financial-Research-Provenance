@@ -1,0 +1,6 @@
+{
+  "n_assets": 50,
+  "n_periods": 252,
+  "seed": 7,
+  "top_quantile": 0.2
+}

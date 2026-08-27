@@ -1,0 +1,1 @@
+"""FRP command-line interface (entry point: ``frpx``)."""

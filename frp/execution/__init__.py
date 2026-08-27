@@ -1,0 +1,1 @@
+"""Execution layer: subprocess runner and metric detection."""

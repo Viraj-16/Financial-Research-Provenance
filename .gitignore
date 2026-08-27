@@ -1,0 +1,25 @@
+# FRP local metadata store (per-project)
+.frp/
+
+# Generated demo outputs (synthetic)
+examples/*/metrics.json
+examples/*/results.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
