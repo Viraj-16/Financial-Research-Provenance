@@ -65,11 +65,13 @@ _HTML_TEMPLATE = """<!DOCTYPE html>
 </main>
 <script id="frp-data" type="application/json">__DATA__</script>
 <script>
+// Read the server-generated snapshot once; all dashboard views use this data.
 const DATA = JSON.parse(document.getElementById("frp-data").textContent);
 const fmt = (v) => (v === null || v === undefined) ? "-" : v;
 const shortHash = (h) => h ? h.slice(0, 8) : "-";
 
 function renderCards() {{
+  // Show the project-level totals before the user inspects individual runs.
   const p = DATA.project;
   document.getElementById("cards").innerHTML = [
     ["Experiments", p.experiment_count],
@@ -84,6 +86,7 @@ function metricsSummary(m) {{
 }}
 
 function renderRows() {{
+  // Each experiment row stores its ID so a click can render the matching detail.
   const rows = DATA.experiments.map((e) => `
     <tr class="exp" data-id="${{e.id}}">
       <td><code>${{e.id}}</code></td>
@@ -105,6 +108,7 @@ function kv(obj) {{
 }}
 
 function renderDetail(id) {{
+  // Look up the selected experiment in the embedded snapshot; no server request is needed.
   const e = DATA.experiments.find((x) => x.id === id);
   if (!e) return;
   const env = e.environment ? `Python ${{e.environment.python}} · ${{e.environment.dependency_count}} deps` : "-";
@@ -141,6 +145,7 @@ renderRows();
 def render_dashboard_html(data: dict[str, Any]) -> str:
     """Render the self-contained dashboard HTML for the given data payload."""
     project_name = str(data.get("project", {}).get("name", "project"))
+  # Embed the payload directly so the generated page remains usable offline.
     embedded = json.dumps(data)
     return (
         _HTML_TEMPLATE
@@ -151,10 +156,12 @@ def render_dashboard_html(data: dict[str, Any]) -> str:
 
 def serve_dashboard(html: str, host: str = "127.0.0.1", port: int = 8787) -> None:
     """Serve a single static HTML page locally (blocking)."""
+  # Encode once so the response length is accurate and the same bytes are sent.
     body = html.encode("utf-8")
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:  # noqa: N802
+      # Every GET receives the same read-only dashboard document.
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))
@@ -166,6 +173,7 @@ def serve_dashboard(html: str, host: str = "127.0.0.1", port: int = 8787) -> Non
 
     server = HTTPServer((host, port), Handler)
     try:
+      # Keep the local server alive until it is interrupted by the user.
         server.serve_forever()
     except KeyboardInterrupt:
         pass
